@@ -15,6 +15,7 @@ A client sought our security services after experiencing a company-wide security
 
 To address this challenge, I created an Elastic SIEM Lab. This lab environment enables me to remotely connect, monitor, test, and analyze various operating systems across multiple network systems. By utilizing these tools, we can ensure prompt and effective protection for our clients' businesses.
 
+
 ----
 
 <div align="center">
@@ -49,21 +50,32 @@ SIEM systems analyze log data from various sources to enable swift detection and
   
 <img src="https://github.com/user-attachments/assets/5af11229-f21c-467f-b618-84495b065757" width="60%" />
 
+### Pre-Setup (Update & Tools)
+sudo apt update && sudo apt -y upgrade
+```bash
+sudo apt update && sudo apt -y upgrade
+```
+- Optional: set hostname and basic tools
+```bash
+sudo hostnamectl set-hostname elastic-lab
+sudo apt -y install curl jq apt-transport-https gnupg lsb-release
+```
+
 ## 1. **Installation**
-### **Elastic SIEM Tools Installation:**
+### **Elastic SIEM Tools Installation**
 Install Elasticsearch, Logstash, and Kibana on your Linux Machine:
 - Elasticsearch is a distributed, RESTful search and analytics engine.
 - Logstash ingests, transforms, and ships data.
 - Kibana is the visualization/dashboard layer.
 
-## 2. **Two Options**
-### **Option A:** Install Elasticsearch, Logstash, and Kibana on your Linux machine.
+## 2. **Two Ways: Basic install (Ubuntu/Debian repo) or Official Elastic 8.x Packages**
+### **Option A: Basic install** Install Elasticsearch, Logstash, and Kibana on your Linux or Ubuntu machine.
 ```bash
 sudo apt update
 sudo apt install -y elasticsearch logstash kibana
 ```
 
-### **Option B:** Install official Elastic packages (official 8.x apt repo for newer builds.)
+### **Option B: Official Elastic Packages** Install official Elastic packages (official 8.x apt repo for newer builds.)
 ```bash
 # Import Elastic’s GPG key and add APT repo
 curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elastic.gpg
