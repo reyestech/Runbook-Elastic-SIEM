@@ -1,99 +1,156 @@
-<div align="center" style="overflow:hidden; height:220px; border-radius:12px;">
-  <img src="https://github.com/reyestech/Elastic-SIEM-Lab-Runbook/assets/153461962/f7d69934-f43a-4762-93f5-8e7374bb31bc" 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/92169d73-f0c5-41de-a56d-a6f783d30c02" 
        alt="Elastic SIEM Banner" 
-       style="width:100%; margin-top:-80px; object-fit:cover;" />
+       width="90%" 
+       style="border-radius:10px;" />
 </div>
-
-# Runbook: Elastic SIEM 
-#### Hector M. Reyes | SOC Analyst
 
 ---
 
-# **Capstone Introduction**
-**Description**
-A client sought our security services after experiencing a company-wide security breach. We faced a significant challenge because our teams are located in different parts of the US. To provide the best protection for our clients' businesses, we operate across multiple time zones and promptly monitor various systems.
+# 🛡️ **Elastic SIEM Runbook** 
+### Hector M. Reyes | SOC Analyst  
+### TL;DR
+- Deployed and configured the **Elastic Stack (Elasticsearch, Logstash, Kibana, Beats)** in a virtualized lab.  
+- Ingested and correlated logs from **Windows, Linux, and attack simulations** (Kali, BeEF, PowerShell).  
+- Visualized detections and validated **real-time alerts** in Kibana.  
+- Documented **SOC workflows, blue-team detections, and automation processes**.
 
-To address this challenge, I created an Elastic SIEM Lab. This lab environment enables me to remotely connect, monitor, test, and analyze various operating systems across multiple network systems. By utilizing these tools, we can ensure prompt and effective protection for our clients' businesses.
+---
 
-----
+## 🧩 **Description & Blue Team Implementation**  
+Following a simulated company-wide breach, I developed an **Elastic SIEM Lab** to replicate enterprise-level monitoring and detection workflows.  
+This environment enables centralized log collection, attack simulation, and threat correlation — providing a realistic platform to train, test, and optimize blue-team operations.
+
+The **Elastic SIEM** acts as the analytical core for defenders, continuously ingesting endpoint, network, and system data to identify anomalies, automate correlation, and generate actionable alerts.  
+By simulating attacker activity through Kali Linux and BeEF, and collecting event data from Windows and Linux endpoints, this lab demonstrates how a modern SOC leverages Elastic to maintain real-time visibility and resilience.
+
+**Objectives:**  
+- Centralize and normalize event logs from multiple operating systems.  
+- Detect and correlate malicious behaviors across environments.  
+- Validate SIEM effectiveness through controlled attack simulations.  
+- Build reusable detection pipelines and SOC playbooks for rapid response.
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/c70da220-57ba-4bbc-9ef3-505184b9feb7" width="80%" />
 </div>
 
-# **Implementing Elastic SIEM**  
-## 🛡️ **Blue Team Solution**  
-The Blue Team has implemented a Security Information and Event Management (SIEM) system to enhance network security. This system collects logs from various sources, including servers and network devices, to detect unusual activities through correlation and alerts. It also automates incident response and integrates threat intelligence for real-time updates on known threats.
+---
 
-For Blue Teams, the SIEM system is essential in identifying threats early, thereby preventing escalation. It provides contextual insights through log correlation, which is vital for incident response. Additionally, customizable rules enable tailored configurations that enhance both efficiency and effectiveness. Operating continuously, the SIEM ensures 24/7 monitoring for rapid detection of threats.
+## 🎯 **Overview**  
+The **Elastic Stack (SIEM)** integrates data ingestion, analysis, and visualization to provide a unified threat detection platform.  
+It transforms raw logs into contextual intelligence, enabling analysts to detect, investigate, and respond efficiently.
 
-| **Tools Used**                              | **Environments / Purpose**                      |
-|---------------------------------------------|-----------------------------------------------|
-| Elastic Cloud / Elastic Stack (Elasticsearch, Logstash, Kibana, SIEM app) | Log processing, storage, visualization, detection |
-| Beats (Filebeat, Winlogbeat) & Elastic Agent | Log & metric collection from endpoints     |
-| VMware • VirtualBox                          | Virtualization platforms                     |
-| Kali Linux                                   | Offensive/testing tools, network simulation (see diagnostics section) |
-| BeEF (Browser Exploitation Framework)         | Simulate browser-based attacks / pivoting     |
-| PowerShell                                   | Windows scripting & log generation           |
+**Key Capabilities:**  
+- **Early Threat Detection:** Identifies suspicious behaviors through rule-based and behavioral analytics.  
+- **Correlated Insights:** Connects related events for deeper investigation.  
+- **Custom Rules & Alerts:** Tailors detections to specific network conditions.  
+- **Continuous Monitoring:** Ensures 24/7 visibility across distributed assets.  
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/5af11229-f21c-467f-b618-84495b065757" width="60%" />
+</div>
 
 ---
 
-## 🎯**Purpose**  
-SIEM systems analyze log data from various sources to enable swift detection and response to security incidents. Utilizing advanced analytics, they deliver a centralized platform for managing security events, offering a comprehensive view of the organization’s security posture.
-**Key Features:**  
-- **Early Threat Detection:** Identifies potential threats and suspicious activities promptly.  
-- **Insights:** Correlation of logs provides the necessary context for understanding incidents.  
-- **Customizable Rules:** Allows adaptation to specific environments and threat landscapes.  
-- **Remote Monitoring:** Facilitates round-the-clock monitoring for detecting threats across client networks.  
+## ⚙️ **Tools & Architecture Overview**  
 
-<img src="https://github.com/user-attachments/assets/5af11229-f21c-467f-b618-84495b065757" width="60%" />
-
----
-
-## 🛠 **Quick Explanation — What to Use & Where to Install**  
-**(NEW SECTION)**  
-Here’s a simple table that shows which tool to use, and where or how it should be installed:
-
-| **Tool / Component**       | **Purpose / Use-Case**                            | **Installation Location / Notes**                     |
-|-----------------------------|-------------------------------|-----------------------------|
-| Elasticsearch             | Store, index, and search logs/metrics      | On a dedicated Linux (Ubuntu/Debian) VM or server; use systemd (`systemctl`) to manage service. |
-| Logstash                  | Ingest, filter, transform, and forward logs  | On same or separate Linux host; configure pipelines in `/etc/logstash/conf.d/`. |
-| Kibana (with SIEM app)    | Dashboards, alerts, visualization, investigations | On Linux; connect to Elasticsearch via `elasticsearch.hosts`. UI in browser on port 5601. |
-| Beats / Elastic Agent     | Collect logs & metrics from endpoints         | Install on Windows, Linux, etc. (clients). Configure outputs to Logstash or Elasticsearch. |
-| Kali Linux                | Attack simulation, diagnostics, reconnaissance | Use as attacker VM; generate logs / simulate breaches; send those logs to Elastic SIEM to test detection. |
-| BeEF                      | Browser exploitation & pivoting simulation   | Can run either on Kali or another VM, connect to SIEM for detection of browser-based events. |
-| PowerShell scripts        | Generate Windows events, automate tasks      | Run on Windows endpoints to simulate login events, malware, or data exfil. |
-
-You can adapt this table to suit your lab topology (all-in-one, distributed, or cloud).
+| **Tool / Component** | **Purpose / Function** | **Environment / Notes** |
+|-----------------------|------------------------|--------------------------|
+| **Elastic Stack** (Elasticsearch, Logstash, Kibana, SIEM App) | Core SIEM platform for log ingestion, detection, and visualization. | Deployed on Ubuntu/Debian VM; accessed via Kibana (port 5601). |
+| **Beats & Elastic Agent** (Filebeat, Winlogbeat) | Collects endpoint logs and metrics from Windows and Linux systems. | Installed on endpoints; forwards to Logstash or Elasticsearch. |
+| **Logstash** | Filters and enriches log data before indexing. | Pipelines configured in `/etc/logstash/conf.d/`. |
+| **Kibana** (SIEM App) | Dashboards, visualization, and alert management. | Connects to Elasticsearch for correlation and analytics. |
+| **Kali Linux** | Simulates attacker behavior for testing detections. | Generates traffic and exploits to test rule accuracy. |
+| **BeEF** (Browser Exploitation Framework) | Conducts browser-based exploitation simulations. | Integrated with Elastic SIEM to test detection and correlation. |
+| **PowerShell Scripts** | Simulate Windows log events and user actions. | Run on Windows endpoints to validate pipeline coverage. |
+| **VMware / VirtualBox** | Virtualization platforms for multi-node deployments. | Hosts Elastic Stack, endpoints, and attacker VMs. |
 
 ---
 
-## 📊 **Diagnostics & Testing using Kali Linux**  
-**(NEW SUB-SECTION INSERTED)**  
-To validate and test your SIEM’s detection capabilities, I used a **Kali Linux VM** to simulate attacker behavior and generate test logs. This included:
+## 🏗️ **Architecture Snapshot**
+```text
+                  ┌───────────────────────────────┐
+                  │        Elastic Stack          │
+                  │ (Elasticsearch + Kibana)      │
+                  └──────────────┬────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │                         │
+            ┌───────▼───────┐         ┌──────▼────────┐
+            │   Logstash    │         │   Beats Agent  │
+            │ (Pipelines)   │         │ (Filebeat, Winlogbeat) │
+            └───────┬───────┘         └────────┬──────┘
+                    │                          │
+                    ▼                          ▼
+         ┌─────────────────────┐    ┌─────────────────────┐
+         │ Windows Endpoint(s) │    │ Kali Linux (Attacks) │
+         └─────────────────────┘    └─────────────────────┘
+```
 
-- Performing reconnaissance (e.g. `nmap`, `ssh`, `ftp`, or HTTP scanning).  
-- Executing compromises or simulated exploitation (e.g. using `Metasploit`, `BeEF`, or other tools).  
-- Generating malicious traffic / anomalous logs that mimic real-world adversarial behavior.  
-- Ensuring these events are forwarded to Logstash → Elasticsearch → visible in Kibana, to verify detection, alerting, and correlation.
-
-This process demonstrates that your SIEM environment is not only ingesting logs, but also detecting threats — a crucial aspect of real-world readiness.
+> **Goal:** Build a full detection pipeline from log generation to SIEM analysis — enabling threat simulation, alert validation, and SOC process refinement.
 
 ---
 
-## 1️⃣ **Pre-Setup (System Preparation & Tools)**
-Before installing the Elastic Stack, ensure your system is up to date and ready.
-**Update and upgrade your packages**
+## 1️⃣ **Pre-Setup — System Preparation & Kali Linux Readiness**
+Prepare all VMs before installing Elastic Stack. This step updates systems, sets hostnames, installs essentials, and configures Kali for attacker simulation so you can validate detection pipelines end-to-end.
+
+### **Objective**
+Get the Elastic SIEM server and Kali attacker VM ready:
+- Patch and baseline Linux hosts.  
+- Set clear hostnames for log correlation.  
+- Install offensive tools on Kali for realistic telemetry.  
+- Verify network connectivity between lab hosts.
+
+### **System Update & Baseline** (Ubuntu / Debian hosts)
+Update, upgrade, and install required packages on the Elastic/Kibana/Logstash nodes:
+
 ```bash
 sudo apt update && sudo apt -y upgrade
+sudo apt -y install curl jq apt-transport-https gnupg lsb-release net-tools
 ```
-(Optional but recommended)
-Set a recognizable hostname and install essential dependencies used for repository management and data parsing utilities.
+
+Set a clear hostname for each VM (helps correlate host logs in Kibana):
 ```bash
 sudo hostnamectl set-hostname elastic-lab
-sudo apt -y install curl jq apt-transport-https gnupg lsb-release
+# example: sudo hostnamectl set-hostname kibana-node
 ```
-> 💡 Tip: Use a short, descriptive hostname like elastic-lab or siem-node — this helps you easily identify VMs when viewing logs in Kibana.
+> 💡**Tip:** Use short, descriptive hostnames like `elastic-lab`, `kibana-node`, `win-endpoint`, `kali-attack01`.
+
+### **Kali Linux Preparation** (Attacker VM)
+Kali will act as the Red Team node to generate recon/exploit traffic for SIEM validation.
+Update the system and remove unused packages:
+```bash
+sudo apt update && sudo apt -y full-upgrade
+sudo apt autoremove -y
+```
+
+Install core offensive & network tools used for testing:
+```bash
+sudo apt -y install nmap metasploit-framework beef-xss curl netcat-traditional hping3
+```
+> These tools create realistic logs: network scans, web exploitation, SSH brute-force, HTTP payloads, and more.
+
+#### **Diagnostics & Testing** (what to generate from Kali)
+Use Kali to simulate attacker behavior and validate detection:
+- Reconnaissance: nmap, hping3, HTTP probes.
+- Exploitation: `msfconsole` (Metasploit), `beef-xss` for browser attacks.
+- Lateral movement / command execution patterns via `netcat`, `ssh` tests.
+- Generate Windows events with PowerShell on Windows VMs to validate endpoint coverage.
+
+Ensure events flow through your pipeline:
+`Beats` → `Logstash` → `Elasticsearch` → `Kibana`
+This confirms ingestion, parsing, correlation, and alerting are functioning.
+
+## **Network Verification**
+Confirm connectivity between core lab hosts:
+If you use firewalls, ensure ports are open (ex: 9200 for Elasticsearch, 5601 for Kibana, Beats ports as needed).
+
+Checklist (pass/fail before install)
+- [ ] All VMs patched & updated 
+- [ ] Hostnames set and documented
+- [ ] Kali has required tools installed
+- [ ] Basic network connectivity verified
+- [ ] Plan for test scenarios documented (recon, exploit, logs to generate)
 
 ---
 
@@ -378,7 +435,7 @@ sudo chown elasticsearch:elasticsearch /var/backups/es-snapshots
 
 curl -X PUT "http://localhost:9200/_snapshot/lab_snapshots" \
   -H "Content-Type: application/json" -d '{
-    "type": "fs" ,"settings":{"location":"/var/backups/es-snapshots"}
+    "type": "fs"," settings":{"location":"/var/backups/es-snapshots"}
   }'
 
 # Create a snapshot of all indices
@@ -386,12 +443,12 @@ curl -X PUT "http://localhost:9200/_snapshot/lab_snapshots/snap-$(date +%Y%m%d%H
 
 # Restore example
 curl -X POST "http://localhost:9200/_snapshot/lab_snapshots/<SNAP_NAME>/_restore" \
-  -H "Content-Type: application/json" -d '{"indices ":"logs- *","include_global_state":false}'
+  -H "Content-Type: application/json" -d '{"indices ": "logs- *" ,"include_global_state ":false}'
 ```
-<img src="https://github.com/user-attachments/assets/cbc704c7-6be5-4198-ae3f-9b946100779d" width="50%" />
 
 ### **Disaster Recovery Planning**
 - Develop DR plans to minimize downtime and restore SIEM functionality after catastrophic events or security breaches.
+<img src="https://github.com/user-attachments/assets/cbc704c7-6be5-4198-ae3f-9b946100779d" width="50%" />
 
 ---
 
