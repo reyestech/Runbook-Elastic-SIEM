@@ -94,14 +94,14 @@ It transforms raw logs into contextual intelligence, enabling analysts to detect
 ## 1️⃣ **Pre-Setup — System Preparation & Kali Linux Readiness**
 Prepare all VMs before installing Elastic Stack. This step updates systems, sets hostnames, installs essentials, and configures Kali for attacker simulation so you can validate detection pipelines end-to-end.
 
-### **Objective**
+## **Objective**
 Get the Elastic SIEM server and Kali attacker VM ready:
 - Patch and baseline Linux hosts.  
 - Set clear hostnames for log correlation.  
 - Install offensive tools on Kali for realistic telemetry.  
 - Verify network connectivity between lab hosts.
 
-### **System Update & Baseline** (Ubuntu / Debian hosts)
+## **System Update & Baseline** (Ubuntu / Debian hosts)
 Update, upgrade, and install required packages on the Elastic/Kibana/Logstash nodes:
 
 ```bash
@@ -116,7 +116,7 @@ sudo hostnamectl set-hostname elastic-lab
 ```
 > 💡**Tip:** Use short, descriptive hostnames like `elastic-lab`, `kibana-node`, `win-endpoint`, `kali-attack01`.
 
-### **Kali Linux Preparation** (Attacker VM)
+## **Kali Linux Preparation** (Attacker VM)
 Kali will act as the Red Team node to generate recon/exploit traffic for SIEM validation.
 Update the system and remove unused packages:
 ```bash
@@ -130,7 +130,7 @@ sudo apt -y install nmap metasploit-framework beef-xss curl netcat-traditional h
 ```
 > These tools create realistic logs: network scans, web exploitation, SSH brute-force, HTTP payloads, and more.
 
-#### **Diagnostics & Testing** (what to generate from Kali)
+## **Diagnostics & Testing** (what to generate from Kali)
 Use Kali to simulate attacker behavior and validate detection:
 - Reconnaissance: nmap, hping3, HTTP probes.
 - Exploitation: `msfconsole` (Metasploit), `beef-xss` for browser attacks.
@@ -145,7 +145,7 @@ This confirms ingestion, parsing, correlation, and alerting are functioning.
 Confirm connectivity between core lab hosts:
 If you use firewalls, ensure ports are open (ex: 9200 for Elasticsearch, 5601 for Kibana, Beats ports as needed).
 
-Checklist (pass/fail before install)
+**Checklist** (pass/fail before install)
 - [ ] All VMs patched & updated 
 - [ ] Hostnames set and documented
 - [ ] Kali has required tools installed
@@ -155,20 +155,20 @@ Checklist (pass/fail before install)
 ---
 
 ## 2️⃣ **Installation**
-### **Elastic SIEM Tools Installation**
+## **Elastic SIEM Tools Installation**
 Install Elasticsearch, Logstash, and Kibana on your Linux Machine:
 - Elasticsearch is a distributed, RESTful search and analytics engine.
 - Logstash ingests, transforms, and ships data.
 - Kibana is the visualization/dashboard layer.
 
-### **Two Ways: Basic install (Ubuntu/Debian repo) or Official Elastic 8.x Packages**
-#### **Option A: Basic install** Install Elasticsearch, Logstash, and Kibana on your Linux or Ubuntu machine.
+## **Two Ways: Basic install (Ubuntu/Debian repo) or Official Elastic 8.x Packages**
+### **Option A: Basic install** Install Elasticsearch, Logstash, and Kibana on your Linux or Ubuntu machine.
 ```bash
 sudo apt update
 sudo apt install -y elasticsearch logstash kibana
 ```
 
-**Option B: Official Elastic Packages** Install official Elastic packages (official 8.x apt repo for newer builds.)
+### **Option B: Official Elastic Packages** Install official Elastic packages (official 8.x apt repo for newer builds.)
 ```bash
 # Import Elastic’s GPG key and add APT repo
 curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elastic.gpg
@@ -187,21 +187,22 @@ kibana --version
 
 ---
 
-## 3️⃣ **Configuration**
+## 3️⃣ **Configurations**
+## **Configuring Settings**
 ### **Elasticsearch Configuration**
-- Configure Elasticsearch settings such as cluster name and node settings.
+Configure Elasticsearch settings such as cluster name and node settings.
 ```bash
 sudo nano /etc/elasticsearch/elasticsearch.yml
 ```
 
 ### **Logstash Configuration**
-- Configure Logstash pipelines to ingest, transform, and output data.
+Configure Logstash pipelines to ingest, transform, and output data.
 ```bash
 sudo nano /etc/logstash/conf.d/<pipeline_name>.conf
 ```
 
 ### **Kibana Configuration**
-- Configure Kibana settings such as server host and port.
+Configure Kibana settings such as server host and port.
 ```bash
 sudo nano /etc/kibana/kibana.yml
 ```
@@ -210,8 +211,9 @@ sudo nano /etc/kibana/kibana.yml
 ---
 
 ## 4️⃣ **Starting Services**
+## **Services**
 ### **Start Elasticsearch**
-- Start the Elasticsearch service.
+Start the Elasticsearch service.
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable --now elasticsearch
@@ -220,14 +222,14 @@ sudo systemctl status elasticsearch --no-pager
 <img src="https://github.com/user-attachments/assets/2d2e5dc8-b9e9-4af8-9c8d-5ef383ce804c" width="70%" />
 
 ### **Start Logstash**
-- Start the Logstash service.
+Start the Logstash service.
 ```bash
 sudo systemctl enable --now logstash
 sudo systemctl status logstash --no-pager
 ```
 
 ### **Start Kibana**
-- Start the Kibana service.
+Start the Kibana service.
 ```bash
 sudo systemctl enable --now kibana
 sudo systemctl status kibana --no-pager
@@ -237,28 +239,28 @@ sudo systemctl status kibana --no-pager
 
 ## 5️⃣**Basic Usage**
 ### **Access Kibana Interface**
-- Open a web browser and navigate to the Kibana web interface:
+Open a web browser and navigate to the Kibana web interface:
 ```text
 http://<your-host-or-ip>:5601
 ```
 
 ### **Create Index Patterns**
-- In Kibana: Stack Management → Data Views → Create data view (e.g., logs-*, filebeat-*).
+In Kibana: Stack Management → Data Views → Create data view (e.g., logs-*, filebeat-*).
 
 ### **Explore Data**
-- Use the Discover tab in Kibana to explore and search through log data.
+Use the Discover tab in Kibana to explore and search through log data.
 
 ---
 
 ## 6️⃣ **Beginner Commands**
-**Index Management**
-- Create an index in Elasticsearch.
+### **Index Management**
+Create an index in Elasticsearch.
 ```bash
 curl -X PUT "http://localhost:9200/lab-index-1?pretty"
 ```
 
-Document Indexing
-- Index a document in Elasticsearch.
+### **Document Indexing**
+Index a document in Elasticsearch.
 ```bash
 curl -X POST "http://localhost:9200/lab-index-1/_doc?pretty" \
   -H "Content-Type: application/json" \
@@ -269,13 +271,13 @@ curl -X POST "http://localhost:9200/lab-index-1/_doc?pretty" \
 
 ## 7️⃣ **Intermediate Commands**
 ### **Logstash Configuration**
-- Verify Logstash configuration syntax.
+Verify Logstash configuration syntax.
 ```bash
 sudo -u logstash /usr/share/logstash/bin/logstash --path.settings /etc/logstash -t
 ```
 
 ### **Pipeline Debugging**
-- Debug Logstash pipelines by printing output to the console.
+Debug Logstash pipelines by printing output to the console.
 ```bash
 sudo systemctl stop logstash
 sudo -u logstash /usr/share/logstash/bin/logstash \
@@ -288,7 +290,7 @@ sudo -u logstash /usr/share/logstash/bin/logstash \
 
 ## 8️⃣ **Advanced Commands**
 ### **Elasticsearch Query DSL**
-- Perform advanced queries using Elasticsearch Query DSL.
+Perform advanced queries using Elasticsearch Query DSL.
 ```bash
 curl -s -X POST "http://localhost:9200/logs-*/_search" \
   -H 'Content-Type: application/json' -d @- <<'JSON'
@@ -301,7 +303,7 @@ JSON
 ```
 
 ### **Logstash Plugins**
-- Install additional Logstash plugins for extended functionality.
+Install additional Logstash plugins for extended functionality.
 ```bash
 sudo /usr/share/logstash/bin/logstash-plugin list
 sudo /usr/share/logstash/bin/logstash-plugin install logstash-filter-translate
@@ -310,20 +312,20 @@ sudo /usr/share/logstash/bin/logstash-plugin install logstash-filter-translate
 
 ## 9️⃣ **SOP (Standard Operating Procedures)**
 ### **Incident Response**
-- Develop SOPs for incident response, including steps for detecting, analyzing, and mitigating security incidents using SIEM tools.
+Develop SOPs for incident response, including steps for detecting, analyzing, and mitigating security incidents using SIEM tools.
 
 ### **Regular Maintenance**
-- Establish SOPs for regular maintenance tasks such as index management, log rotation, and performance optimization.
+Establish SOPs for regular maintenance tasks such as index management, log rotation, and performance optimization.
 <img src="https://github.com/user-attachments/assets/855a1756-d498-481f-be45-25ec41f299e8" width="80%" />
 
 ---
 
 ## 🔟 **Documentation and Reporting**
 ### **Doument Configuration**
-- Maintain detailed documentation of SIEM configuration settings, including Elasticsearch indices, Logstash pipelines, and Kibana visualizations.
+Maintain detailed documentation of SIEM configuration settings, including Elasticsearch indices, Logstash pipelines, and Kibana visualizations.
 
 ### **Generate Reports**
-- Use Kibana dashboards and visualizations to generate reports on security incidents, log trends, and system performance.
+Use Kibana dashboards and visualizations to generate reports on security incidents, log trends, and system performance.
 ```bash
 # Export saved objects (dashboards, visualizations, data views, etc.)
 curl -X POST "http://localhost:5601/api/saved_objects/_export" \
@@ -336,29 +338,29 @@ curl -X POST "http://localhost:5601/api/saved_objects/_export" \
 
 ## 1️⃣1️⃣ **Compliance and Regulatory Considerations**
 ### **Compliance Frameworks**
-- Ensure SIEM configurations comply with relevant industry regulations, standards, and frameworks such as PCI DSS, HIPAA, and GDPR.
+Ensure SIEM configurations comply with relevant industry regulations, standards, and frameworks such as PCI DSS, HIPAA, and GDPR.
 
 ### **Auditing and Monitoring**
-- Implement auditing and monitoring mechanisms to track changes to SIEM configurations and detect unauthorized access or tampering.
+Implement auditing and monitoring mechanisms to track changes to SIEM configurations and detect unauthorized access or tampering.
 
 ---
 
 ## 1️⃣2️⃣ **Continuous Learning**
 ### **Training and Education**
-- Invest in continuous training and education to stay updated on the latest SIEM technologies, best practices, and emerging threats.
+Invest in continuous training and education to stay updated on the latest SIEM technologies, best practices, and emerging threats.
 
 ---
 
 ## 1️⃣3️⃣ **Troubleshooting**
 ### **Logstash Debugging**
-- Troubleshoot Logstash configuration errors by examining Logstash logs for errors and warnings.
+Troubleshoot Logstash configuration errors by examining Logstash logs for errors and warnings.
 ```bash
 sudo journalctl -u logstash -e --no-pager
 tail -n 200 /var/log/logstash/logstash-plain.log
 ```
 
 ### **Elasticsearch Health Check**
-- Check the health status of Elasticsearch to identify any issues.
+Check the health status of Elasticsearch to identify any issues.
 ```bash
 sudo journalctl -u logstash -e --no-pager
 tail -n 200 /var/log/logstash/logstash-plain.log
@@ -368,7 +370,7 @@ tail -n 200 /var/log/logstash/logstash-plain.log
 
 ## 1️⃣4️⃣ **Integration with Other Tools**
 ### **Integration with IDS/IPS**
-- Integrate SIEM with Intrusion Detection/Prevention Systems to correlate security events and alerts.
+Integrate SIEM with Intrusion Detection/Prevention Systems to correlate security events and alerts.
 
 ### **Integration with Vulnerability Scanners**
 - Integrate SIEM with vulnerability scanners to identify security weaknesses and prioritize remediation efforts.
@@ -394,31 +396,31 @@ output {
 
 ## 1️⃣5️⃣ **Advanced Techniques**
 ### **Custom Dashboards**
-- Develop custom dashboards and visualizations in Kibana to monitor specific security metrics and KPIs.
+Develop custom dashboards and visualizations in Kibana to monitor specific security metrics and KPIs.
 
 ### **Machine Learning and Threat Intelligence**
-- Leverage machine learning algorithms and threat intelligence feeds to enhance threat detection and automate incident response.
+Leverage machine learning algorithms and threat intelligence feeds to enhance threat detection and automate incident response.
 <img src="https://github.com/user-attachments/assets/acce705c-9e05-4e47-a7bb-50a3eafd0b0b" width="70%" />
 
 ---
 
 ## 1️⃣6️⃣ **Automation**
 ### **Automated Alerting**
-- Configure automated alerting mechanisms in Kibana to notify security teams of potential incidents or abnormal behavior.
+Configure automated alerting mechanisms in Kibana to notify security teams of potential incidents or abnormal behavior.
 ```bash
 # Example: list rules via Kibana Alerting API (authentication required)
 curl -X GET "http://localhost:5601/api/alerting/rule/_find" -H "kbn-xsrf: true"
 ```
 
 ### **Automated Remediation**
-- Implement automated response actions to mitigate incidents (block IPs, quarantine hosts, deactivate accounts) via webhooks/SOAR.
+Implement automated response actions to mitigate incidents (block IPs, quarantine hosts, deactivate accounts) via webhooks/SOAR.
 <img src="https://github.com/user-attachments/assets/d82a73ff-524b-4074-a162-5ac3de692120" width="50%" />
 
 ---
 
 ## 1️⃣7️⃣ **Scalability and High Availability**
 ### **Cluster Deployment**
-- Deploy Elasticsearch/Logstash/Kibana to achieve scalability and high availability.
+Deploy Elasticsearch/Logstash/Kibana to achieve scalability and high availability.
 
 ### **Load Balancing**
 Implement load balancing to distribute incoming log data across cluster nodes.
@@ -427,7 +429,7 @@ Implement load balancing to distribute incoming log data across cluster nodes.
 
 ## 1️⃣8️⃣ **Disaster Recovery and Backup**
 ### **Backup and Restore**
-- Establish backup and restore procedures for SIEM data to ensure integrity and facilitate recovery.
+Establish backup and restore procedures for SIEM data to ensure integrity and facilitate recovery.
 ```bash
 # Register snapshot repository (filesystem example)
 sudo mkdir -p /var/backups/es-snapshots
@@ -447,7 +449,7 @@ curl -X POST "http://localhost:9200/_snapshot/lab_snapshots/<SNAP_NAME>/_restore
 ```
 
 ### **Disaster Recovery Planning**
-- Develop DR plans to minimize downtime and restore SIEM functionality after catastrophic events or security breaches.
+Develop DR plans to minimize downtime and restore SIEM functionality after catastrophic events or security breaches.
 <img src="https://github.com/user-attachments/assets/cbc704c7-6be5-4198-ae3f-9b946100779d" width="50%" />
 
 ---
